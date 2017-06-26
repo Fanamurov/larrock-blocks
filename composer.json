@@ -1,0 +1,21 @@
+{
+    "name": "fanamurov/larrock-blocks",
+    "description": "Template blocks component for larrockCMS",
+    "type": "library",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Alexandr Fanamurov",
+            "email": "fanamurov@ya.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Larrock\\ComponentBlocks\\": "src",
+            "Larrock\\ComponentBlocks\\Models\\": "src/Models"
+        }
+    },
+    "require": {
+        "fanamurov/larrock-core": "^0.1"
+    }
+}
