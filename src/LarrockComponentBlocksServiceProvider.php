@@ -25,7 +25,7 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
         $this->app['router']->aliasMiddleware('AddBlocksTemplate', AddBlocksTemplate::class);
         $this->app->make(BlocksComponent::class);
 
-        if ( !class_exists('CreateLarrockBlocksTable')){
+        if ( !class_exists('CreateBlocksTable')){
             // Publish the migration
             $timestamp = date('Y_m_d_His', time());
 

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateLarrockBlocksTable extends Migration {
+class CreateBlocksTable extends Migration {
 
 	/**
 	 * Run the migrations.
