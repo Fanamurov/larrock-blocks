@@ -12,7 +12,10 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(){}
+    public function boot()
+    {
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+    }
 
     /**
      * Register the application services.
@@ -21,7 +24,6 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        include __DIR__.'/routes.php';
         $this->app['router']->aliasMiddleware('AddBlocksTemplate', AddBlocksTemplate::class);
         $this->app->make(BlocksComponent::class);
 
