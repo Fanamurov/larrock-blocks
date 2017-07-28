@@ -24,13 +24,15 @@ class AddBlocksTemplate
         foreach ($blocks as $block){
             $block_name = str_replace('-', '_', $block->url);
             $can_edit_class = 'larrock-block larrock-block-'. $block->url;
+            $html_edit_block = '';
             if($user = \Auth::user()){
                 if ($user->level() > 2) {
                     $can_edit_class .= ' larrock-admin-block';
+                    $html_edit_block = '<a class="admin_edit" target="_blank" href="/admin/blocks/' . $block->id . '/edit">Редактировать</a>';
                 }
             }
             $block->description = '<div class="'. $can_edit_class .'">'. $block->description
-                .'<a class="admin_edit" target="_blank" href="/admin/blocks/' . $block->id . '/edit">Редактировать</a></div>';
+                .$html_edit_block .'</div>';
             View::share($block_name, $block);
         }
 
