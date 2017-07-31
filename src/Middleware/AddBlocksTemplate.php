@@ -4,7 +4,7 @@ namespace Larrock\ComponentBlocks\Middleware;
 
 use Cache;
 use Closure;
-use Larrock\ComponentBlocks\Models\Blocks;
+use Larrock\ComponentBlocks\Facades\LarrockBlocks;
 use View;
 
 class AddBlocksTemplate
@@ -19,7 +19,7 @@ class AddBlocksTemplate
     public function handle($request, Closure $next)
     {
         $blocks = Cache::remember('blocks', 1440, function(){
-            return Blocks::whereActive(1)->get();
+            return LarrockBlocks::getModel()->whereActive(1)->get();
         });
         foreach ($blocks as $block){
             $block_name = str_replace('-', '_', $block->url);

@@ -25,7 +25,11 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app['router']->aliasMiddleware('AddBlocksTemplate', AddBlocksTemplate::class);
-        $this->app->make(BlocksComponent::class);
+
+        $this->app->singleton('larrockblocks', function() {
+            $class = config('larrock.components.blocks', BlocksComponent::class);
+            return new $class;
+        });
 
         if ( !class_exists('CreateBlocksTable')){
             // Publish the migration

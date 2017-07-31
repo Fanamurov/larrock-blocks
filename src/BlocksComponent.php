@@ -2,6 +2,7 @@
 
 namespace Larrock\ComponentBlocks;
 
+use Larrock\ComponentBlocks\Facades\LarrockBlocks;
 use Larrock\ComponentBlocks\Models\Blocks;
 use Larrock\Core\Component;
 use Larrock\Core\Helpers\FormBuilder\FormInput;
@@ -14,7 +15,7 @@ class BlocksComponent extends Component
         $this->name = $this->table = 'blocks';
         $this->title = 'Блоки';
         $this->description = 'Блоки используемые для вставки в шаблон. Блок доступен в шаблоне по переменной с имененем url ("-" заменяется на "_")';
-        $this->model = Blocks::class;
+        $this->model = \config('larrock.models.blocks', Blocks::class);
         $this->addRows()->addPositionAndActive()->isSearchable()->addPlugins();
     }
 
@@ -37,10 +38,10 @@ class BlocksComponent extends Component
 
     public function renderAdminMenu()
     {
-        $count = \Cache::remember('count-data-admin-'. $this->name, 1440, function(){
-            return Blocks::count(['id']);
+        $count = \Cache::remember('count-data-admin-'. LarrockBlocks::getName(), 1440, function(){
+            return LarrockBlocks::getModel()->count(['id']);
         });
-        $dropdown = Blocks::whereActive(1)->orderBy('position', 'desc')->get(['id', 'title', 'url']);
-        return view('larrock::admin.sectionmenu.types.dropdown', ['count' => $count, 'app' => $this, 'url' => '/admin/'. $this->name, 'dropdown' => $dropdown]);
+        $dropdown = LarrockBlocks::getModel()->whereActive(1)->orderBy('position', 'desc')->get(['id', 'title', 'url']);
+        return view('larrock::admin.sectionmenu.types.dropdown', ['count' => $count, 'app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName(), 'dropdown' => $dropdown]);
     }
 }

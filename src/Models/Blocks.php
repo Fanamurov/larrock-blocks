@@ -9,7 +9,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
-use Larrock\ComponentBlocks;
+use Larrock\ComponentBlocks\Facades\LarrockBlocks;
 
 /**
  * Larrock\ComponentBlocks\Models\Blocks
@@ -75,20 +75,17 @@ class Blocks extends Model implements HasMediaConversions
 
 	public function getImages()
 	{
-        $config = new ComponentBlocks\BlocksComponent();
-		return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where('model_type', '=', $config->model)->orderBy('order_column', 'DESC');
+		return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where('model_type', '=', LarrockBlocks::getModelName())->orderBy('order_column', 'DESC');
 	}
 
 	public function getFirstImage()
 	{
-        $config = new ComponentBlocks\BlocksComponent();
-		return $this->hasOne('Spatie\MediaLibrary\Media', 'model_id', 'id')->where('model_type', '=', $config->model)->orderBy('order_column', 'DESC');
+		return $this->hasOne('Spatie\MediaLibrary\Media', 'model_id', 'id')->where('model_type', '=', LarrockBlocks::getModelName())->orderBy('order_column', 'DESC');
 	}
 
     public function getFiles()
     {
-        $config = new ComponentBlocks\BlocksComponent();
-        return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', $config->model], ['collection_name', '=', 'files']])->orderBy('order_column', 'DESC');
+        return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', LarrockBlocks::getModelName()], ['collection_name', '=', 'files']])->orderBy('order_column', 'DESC');
     }
 
 	public function getFirstImageAttribute()
