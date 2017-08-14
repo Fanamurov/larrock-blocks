@@ -70,7 +70,7 @@ class Blocks extends Model implements HasMediaConversions
 
 	public function get_seo()
 	{
-		return $this->hasOne(Seo::class, 'id_connect', 'id')->whereSeoTypeConnect('blocks');
+		return $this->hasOne(Seo::class, 'seo_id_connect', 'id')->whereSeoTypeConnect('blocks');
 	}
 
 	public function getImages()
