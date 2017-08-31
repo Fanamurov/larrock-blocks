@@ -41,7 +41,10 @@ class BlocksComponent extends Component
         $count = \Cache::remember('count-data-admin-'. LarrockBlocks::getName(), 1440, function(){
             return LarrockBlocks::getModel()->count(['id']);
         });
-        $dropdown = LarrockBlocks::getModel()->whereActive(1)->orderBy('position', 'desc')->get(['id', 'title', 'url']);
-        return view('larrock::admin.sectionmenu.types.dropdown', ['count' => $count, 'app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName(), 'dropdown' => $dropdown]);
+        if($count > 0){
+            $dropdown = LarrockBlocks::getModel()->whereActive(1)->orderBy('position', 'desc')->get(['id', 'title', 'url']);
+            return view('larrock::admin.sectionmenu.types.dropdown', ['count' => $count, 'app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName(), 'dropdown' => $dropdown]);
+        }
+        return view('larrock::admin.sectionmenu.types.default', ['app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName()]);
     }
 }
