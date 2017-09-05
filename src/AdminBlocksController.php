@@ -12,7 +12,7 @@ class AdminBlocksController extends AdminController
 	{
 	    $this->config = LarrockBlocks::shareConfig();
 
-        Breadcrumbs::setView('larrock::admin.breadcrumb.breadcrumb');
+		\Config::set('breadcrumbs.view', 'larrock::admin.breadcrumb.breadcrumb');
         Breadcrumbs::register('admin.'. LarrockBlocks::getName() .'.index', function($breadcrumbs){
             $breadcrumbs->push(LarrockBlocks::getTitle(), '/admin/'. LarrockBlocks::getName());
         });
