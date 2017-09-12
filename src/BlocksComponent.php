@@ -47,4 +47,9 @@ class BlocksComponent extends Component
         }
         return view('larrock::admin.sectionmenu.types.default', ['app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName()]);
     }
+
+    public function toDashboard()
+    {
+        return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig()]);
+    }
 }
