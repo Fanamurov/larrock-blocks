@@ -78,12 +78,12 @@ class Blocks extends Model implements HasMediaConversions
 
     public function getImages()
     {
-        return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where('model_type', '=', LarrockBlocks::getModelName())->orderBy('order_column', 'DESC');
+        return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', LarrockBlocks::getModelName()], ['collection_name', '=', 'images']])->orderBy('order_column', 'DESC');
     }
 
     public function getFirstImage()
     {
-        return $this->hasOne('Spatie\MediaLibrary\Media', 'model_id', 'id')->where('model_type', '=', LarrockBlocks::getModelName())->orderBy('order_column', 'DESC');
+        return $this->hasOne('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', LarrockBlocks::getModelName()], ['collection_name', '=', 'images']])->orderBy('order_column', 'DESC');
     }
 
     public function getFiles()

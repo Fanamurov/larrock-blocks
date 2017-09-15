@@ -5,6 +5,7 @@ namespace Larrock\ComponentBlocks\Middleware;
 use Cache;
 use Closure;
 use Larrock\ComponentBlocks\Facades\LarrockBlocks;
+use Larrock\Core\Helpers\Plugins\RenderGallery;
 use View;
 
 class AddBlocksTemplate
@@ -31,6 +32,12 @@ class AddBlocksTemplate
                     $html_edit_block = '<a class="admin_edit" target="_blank" href="/admin/blocks/' . $block->id . '/edit">Редактировать</a>';
                 }
             }
+            $block = Cache::remember('blocksPlugins'. $block->id, 1440, function() use ($block){
+                $RenderGallery = new RenderGallery();
+                $block = $RenderGallery->renderGallery($block);
+                $block = $RenderGallery->renderFilesGallery($block);
+                return $block;
+            });
             $block->description = '<div class="'. $can_edit_class .'">'. $block->description
                 .$html_edit_block .'</div>';
             View::share($block_name, $block);
