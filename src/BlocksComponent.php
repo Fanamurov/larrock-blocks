@@ -50,6 +50,9 @@ class BlocksComponent extends Component
 
     public function toDashboard()
     {
-        return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig()]);
+        $data = \Cache::remember('LarrockBlocksItems', 1440, function(){
+            return LarrockBlocks::getModel()->whereActive(1)->get();
+        });
+        return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig(), 'data' => $data]);
     }
 }
