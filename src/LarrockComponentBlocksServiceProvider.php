@@ -21,6 +21,8 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/vendor/larrock')
         ]);
+
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
     }
 
     /**
@@ -36,14 +38,5 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
             $class = config('larrock.components.blocks', BlocksComponent::class);
             return new $class;
         });
-
-        if ( !class_exists('CreateBlocksTable')){
-            // Publish the migration
-            $timestamp = date('Y_m_d_His', time());
-
-            $this->publishes([
-                __DIR__.'/database/migrations/0000_00_00_000000_create_blocks_table.php' => database_path('migrations/'.$timestamp.'_create_blocks_table.php')
-            ], 'migrations');
-        }
     }
 }
