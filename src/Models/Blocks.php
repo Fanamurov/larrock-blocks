@@ -4,6 +4,7 @@ namespace Larrock\ComponentBlocks\Models;
 
 use Cache;
 use Illuminate\Database\Eloquent\Model;
+use Larrock\Core\Helpers\Plugins\RenderPlugins;
 use Larrock\Core\Models\Seo;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
@@ -105,5 +106,19 @@ class Blocks extends Model implements HasMediaConversions
     public function getFullUrlAttribute()
     {
         return '/blocks/'. $this->url;
+    }
+
+    /**
+     * Замена тегов плагинов на их данные
+     *
+     * @return mixed
+     */
+    public function getDescriptionRenderAttribute()
+    {
+        return \Cache::remember('DescriptionRenderBlocks'. $this->id, 1440, function(){
+            $renderPlugins = new RenderPlugins($this->description, $this);
+            $render = $renderPlugins->renderBlocks()->renderImageGallery()->renderFilesGallery();
+            return $render->rendered_html;
+        });
     }
 }

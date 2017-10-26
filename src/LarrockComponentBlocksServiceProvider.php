@@ -3,6 +3,7 @@
 namespace Larrock\ComponentBlocks;
 
 use Illuminate\Support\ServiceProvider;
+use Larrock\ComponentBlocks\Facades\LarrockBlocks;
 use Larrock\ComponentBlocks\Middleware\AddBlocksTemplate;
 
 class LarrockComponentBlocksServiceProvider extends ServiceProvider
@@ -32,6 +33,15 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $blade = $this->app['view']->getEngineResolver()->resolve('blade')->getCompiler();
+
+        $blade->directive('renderBlock', function ($expression) {
+            if($block = LarrockBlocks::getModel()->whereUrl($expression)->first()){
+                $html = view('larrock::front.plugins.renderBlock.default', ['data' => $block])->render();
+                return "<?php echo '$html' ?>";
+            }
+        });
+
         $this->app['router']->aliasMiddleware('AddBlocksTemplate', AddBlocksTemplate::class);
 
         $this->app->singleton('larrockblocks', function() {
