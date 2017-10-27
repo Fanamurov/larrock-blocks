@@ -2,15 +2,14 @@
 
 namespace Larrock\ComponentBlocks\Models;
 
-use Cache;
 use Illuminate\Database\Eloquent\Model;
 use Larrock\Core\Helpers\Plugins\RenderPlugins;
-use Larrock\Core\Models\Seo;
+use Larrock\Core\Traits\GetFilesAndImages;
+use Larrock\Core\Traits\GetSeo;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use Larrock\ComponentBlocks\Facades\LarrockBlocks;
-use Spatie\MediaLibrary\Media;
 
 /**
  * Larrock\ComponentBlocks\Models\Blocks
@@ -42,12 +41,16 @@ class Blocks extends Model implements HasMediaConversions
 {
     use HasMediaTrait;
     use SearchableTrait;
+    use GetFilesAndImages;
+    use GetSeo;
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
         $this->fillable(LarrockBlocks::addFillableUserRows(['title', 'short', 'description', 'url', 'position', 'active']));
         $this->table = LarrockBlocks::getConfig()->table;
+        $this->modelName = LarrockBlocks::getModelName();
+        $this->componentName = 'blocks';
     }
 
     protected $searchable = [
@@ -56,52 +59,10 @@ class Blocks extends Model implements HasMediaConversions
         ]
     ];
 
-    public function registerMediaConversions(Media $media = null)
-    {
-        $this->addMediaConversion('110x110')
-            ->height(110)->width(110)
-            ->performOnCollections('images');
-
-        $this->addMediaConversion('140x140')
-            ->height(140)->width(140)
-            ->performOnCollections('images');
-    }
-
     protected $casts = [
         'position' => 'integer',
         'active' => 'integer'
     ];
-
-    public function get_seo()
-    {
-        return $this->hasOne(Seo::class, 'seo_id_connect', 'id')->whereSeoTypeConnect('blocks');
-    }
-
-    public function getImages()
-    {
-        return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', LarrockBlocks::getModelName()], ['collection_name', '=', 'images']])->orderBy('order_column', 'DESC');
-    }
-
-    public function getFirstImage()
-    {
-        return $this->hasOne('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', LarrockBlocks::getModelName()], ['collection_name', '=', 'images']])->orderBy('order_column', 'DESC');
-    }
-
-    public function getFiles()
-    {
-        return $this->hasMany('Spatie\MediaLibrary\Media', 'model_id', 'id')->where([['model_type', '=', LarrockBlocks::getModelName()], ['collection_name', '=', 'files']])->orderBy('order_column', 'DESC');
-    }
-
-    public function getFirstImageAttribute()
-    {
-        $value = Cache::remember('image_f_blocks'. $this->id, 1440, function() {
-            if($get_image = $this->getMedia('images')->sortByDesc('order_column')->first()){
-                return $get_image->getUrl();
-            }
-            return FALSE;
-        });
-        return $value;
-    }
 
     public function getFullUrlAttribute()
     {
