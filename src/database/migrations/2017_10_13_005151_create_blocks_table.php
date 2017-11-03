@@ -18,7 +18,7 @@ class CreateBlocksTable extends Migration {
                 $table->increments('id');
                 $table->string('title');
                 $table->text('description')->nullable();
-                $table->string('url')->unique();
+                $table->string('url', 191)->unique();
                 $table->integer('position')->default(0);
                 $table->string('redirect')->default('');
                 $table->integer('active')->default(1);
