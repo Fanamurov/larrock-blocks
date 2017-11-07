@@ -37,7 +37,7 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
 
         $blade->directive('renderBlock', function ($expression) {
             if($block = LarrockBlocks::getModel()->whereUrl($expression)->first()){
-                $html = view('larrock::front.plugins.renderBlock.default', ['data' => $block])->render();
+                $html = view('larrock::front.plugins.renderBlock.default-not-editable', ['data' => $block])->render();
                 return "<?php echo '$html' ?>";
             }
         });
