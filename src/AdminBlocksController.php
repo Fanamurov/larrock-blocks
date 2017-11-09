@@ -3,11 +3,14 @@
 namespace Larrock\ComponentBlocks;
 
 use Breadcrumbs;
+use Illuminate\Routing\Controller;
 use Larrock\ComponentBlocks\Facades\LarrockBlocks;
-use Larrock\Core\AdminController;
+use Larrock\Core\Traits\AdminMethods;
 
-class AdminBlocksController extends AdminController
+class AdminBlocksController extends Controller
 {
+    use AdminMethods;
+
 	public function __construct()
 	{
 	    $this->config = LarrockBlocks::shareConfig();
