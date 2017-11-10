@@ -2,6 +2,7 @@
 
 namespace Larrock\ComponentBlocks;
 
+use Cache;
 use Larrock\ComponentBlocks\Facades\LarrockBlocks;
 use Larrock\ComponentBlocks\Models\Blocks;
 use Larrock\Core\Component;
@@ -54,5 +55,28 @@ class BlocksComponent extends Component
             return LarrockBlocks::getModel()->whereActive(1)->get();
         });
         return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig(), 'data' => $data]);
+    }
+
+    public function search($admin)
+    {
+        return Cache::remember('search'. $this->name. $admin, 1440, function() use ($admin){
+            $data = [];
+            if($admin){
+                $items = LarrockBlocks::getModel()->get(['id', 'title', 'url']);
+            }else{
+                $items = LarrockBlocks::getModel()->whereActive(1)->get(['id', 'title', 'url']);
+            }
+            foreach ($items as $item){
+                $data[$item->id]['id'] = $item->id;
+                $data[$item->id]['title'] = $item->title;
+                $data[$item->id]['full_url'] = $item->full_url;
+                $data[$item->id]['component'] = $this->name;
+                $data[$item->id]['category'] = NULL;
+            }
+            if(count($data) === 0){
+                return NULL;
+            }
+            return $data;
+        });
     }
 }
