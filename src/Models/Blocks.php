@@ -55,6 +55,7 @@ class Blocks extends Model implements HasMediaConversions
         parent::__construct($attributes);
         $this->fillable(LarrockBlocks::addFillableUserRows(['title', 'short', 'description', 'url', 'position', 'active']));
         $this->component = LarrockBlocks::getConfig();
+        $this->table = LarrockBlocks::getTable();
     }
 
     protected $searchable = [
@@ -80,7 +81,7 @@ class Blocks extends Model implements HasMediaConversions
      */
     public function getDescriptionRenderAttribute()
     {
-        $cache_key = 'DescriptionRender'. $this->component->table.'-'. $this->id;
+        $cache_key = 'DescriptionRender'. $this->table.'-'. $this->id;
         if(\Auth::check()){
             $cache_key .= '-'. \Auth::user()->role->first()->level;
         }
