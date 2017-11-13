@@ -3,6 +3,7 @@
 namespace Larrock\ComponentBlocks\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Larrock\Core\Component;
 use Larrock\Core\Helpers\Plugins\RenderPlugins;
 use Larrock\Core\Traits\GetFilesAndImages;
 use Larrock\Core\Traits\GetSeo;
@@ -39,6 +40,11 @@ use Larrock\ComponentBlocks\Facades\LarrockBlocks;
  */
 class Blocks extends Model implements HasMediaConversions
 {
+    /**
+     * @var $this Component
+     */
+    public $component;
+
     use HasMediaTrait;
     use SearchableTrait;
     use GetFilesAndImages;
@@ -48,9 +54,7 @@ class Blocks extends Model implements HasMediaConversions
     {
         parent::__construct($attributes);
         $this->fillable(LarrockBlocks::addFillableUserRows(['title', 'short', 'description', 'url', 'position', 'active']));
-        $this->table = LarrockBlocks::getConfig()->table;
-        $this->modelName = LarrockBlocks::getModelName();
-        $this->componentName = 'blocks';
+        $this->component = LarrockBlocks::getConfig();
     }
 
     protected $searchable = [
@@ -76,7 +80,7 @@ class Blocks extends Model implements HasMediaConversions
      */
     public function getDescriptionRenderAttribute()
     {
-        $cache_key = 'DescriptionRender'. $this->table.'-'. $this->id;
+        $cache_key = 'DescriptionRender'. $this->component->table.'-'. $this->id;
         if(\Auth::check()){
             $cache_key .= '-'. \Auth::user()->role->first()->level;
         }
