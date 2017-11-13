@@ -57,7 +57,7 @@ class BlocksComponent extends Component
         return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig(), 'data' => $data]);
     }
 
-    public function search($admin)
+    public function search($admin = NULL)
     {
         return Cache::remember('search'. $this->name. $admin, 1440, function() use ($admin){
             $data = [];
