@@ -43,7 +43,7 @@ class Blocks extends Model implements HasMediaConversions
     /**
      * @var $this Component
      */
-    public $component;
+    public $config;
 
     use HasMediaTrait;
     use SearchableTrait;
@@ -54,7 +54,7 @@ class Blocks extends Model implements HasMediaConversions
     {
         parent::__construct($attributes);
         $this->fillable(LarrockBlocks::addFillableUserRows(['title', 'short', 'description', 'url', 'position', 'active']));
-        $this->component = LarrockBlocks::getConfig();
+        $this->config = LarrockBlocks::getConfig();
         $this->table = LarrockBlocks::getTable();
     }
 
