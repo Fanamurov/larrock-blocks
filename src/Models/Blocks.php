@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Larrock\Core\Component;
 use Larrock\Core\Helpers\Plugins\RenderPlugins;
 use Larrock\Core\Traits\GetFilesAndImages;
+use Larrock\Core\Traits\GetLink;
 use Larrock\Core\Traits\GetSeo;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
@@ -49,11 +50,12 @@ class Blocks extends Model implements HasMediaConversions
     use SearchableTrait;
     use GetFilesAndImages;
     use GetSeo;
+    use GetLink;
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->fillable(LarrockBlocks::addFillableUserRows(['title', 'short', 'description', 'url', 'position', 'active']));
+        $this->fillable(LarrockBlocks::addFillableUserRows([]));
         $this->config = LarrockBlocks::getConfig();
         $this->table = LarrockBlocks::getTable();
     }

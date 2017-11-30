@@ -23,6 +23,7 @@ class CreateBlocksTable extends Migration {
                 $table->string('redirect')->default('');
                 $table->integer('active')->default(1);
                 $table->timestamps();
+                $table->index(['url', 'active']);
             });
         }
 	}

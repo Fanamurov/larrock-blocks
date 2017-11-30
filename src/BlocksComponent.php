@@ -29,10 +29,10 @@ class BlocksComponent extends Component
     protected function addRows()
     {
         $row = new FormInput('title', 'Название блока');
-        $this->rows['title'] = $row->setValid('max:255|required')->setTypo();
+        $this->rows['title'] = $row->setValid('max:255|required')->setTypo()->setFillable();
 
         $row = new FormTextarea('description', 'Текст блока');
-        $this->rows['description'] = $row->setTypo();
+        $this->rows['description'] = $row->setTypo()->setFillable();
 
         return $this;
     }
