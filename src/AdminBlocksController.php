@@ -12,6 +12,7 @@ class AdminBlocksController extends Controller
 
 	public function __construct()
 	{
+	    $this->shareMethods();
         $this->middleware(LarrockBlocks::combineAdminMiddlewares());
 	    $this->config = LarrockBlocks::shareConfig();
 		\Config::set('breadcrumbs.view', 'larrock::admin.breadcrumb.breadcrumb');
