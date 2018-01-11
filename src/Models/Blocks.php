@@ -76,6 +76,11 @@ class Blocks extends Model implements HasMediaConversions
         return '/blocks/'. $this->url;
     }
 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     /**
      * Замена тегов плагинов на их данные
      *
