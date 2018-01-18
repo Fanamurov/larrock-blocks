@@ -99,4 +99,9 @@ class Blocks extends Model implements HasMediaConversions
             return $render->rendered_html;
         });
     }
+
+    public function setUrlAttribute($value)
+    {
+        $this->attributes['url'] = strtolower(str_replace('-', '_', $value));
+    }
 }
