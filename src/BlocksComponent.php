@@ -3,7 +3,7 @@
 namespace Larrock\ComponentBlocks;
 
 use Cache;
-use Larrock\ComponentBlocks\Facades\LarrockBlocks;
+use LarrockBlocks;
 use Larrock\ComponentBlocks\Models\Blocks;
 use Larrock\Core\Component;
 use Larrock\Core\Helpers\FormBuilder\FormInput;
@@ -39,27 +39,24 @@ class BlocksComponent extends Component
 
     public function renderAdminMenu()
     {
-        $count = \Cache::remember('count-data-admin-'. LarrockBlocks::getName(), 1440, function(){
+        $count = Cache::rememberForever('count-data-admin-'. LarrockBlocks::getName(), function(){
             return LarrockBlocks::getModel()->count(['id']);
         });
-        if($count > 0){
-            $dropdown = LarrockBlocks::getModel()->whereActive(1)->orderBy('position', 'desc')->get(['id', 'title', 'url']);
-            return view('larrock::admin.sectionmenu.types.dropdown', ['count' => $count, 'app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName(), 'dropdown' => $dropdown]);
-        }
-        return view('larrock::admin.sectionmenu.types.default', ['app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName()]);
+        return view('larrock::admin.sectionmenu.types.default',
+            ['app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName(), 'count' => $count]);
     }
 
     public function toDashboard()
     {
-        $data = \Cache::remember('LarrockBlocksItems', 1440, function(){
-            return LarrockBlocks::getModel()->whereActive(1)->get();
+        $data = Cache::rememberForever('LarrockBlocksItemsDashboard', function(){
+            return LarrockBlocks::getModel()->whereActive(1)->orderByDesc('updated_at')->get();
         });
         return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig(), 'data' => $data]);
     }
 
     public function search($admin = NULL)
     {
-        return Cache::remember('search'. $this->name. $admin, 1440, function() use ($admin){
+        return Cache::rememberForever('search'. $this->name. $admin, function() use ($admin){
             $data = [];
             if($admin){
                 $items = LarrockBlocks::getModel()->get(['id', 'title', 'url']);
@@ -73,7 +70,7 @@ class BlocksComponent extends Component
                 $data[$item->id]['component'] = $this->name;
                 $data[$item->id]['category'] = NULL;
             }
-            if(count($data) === 0){
+            if(\count($data) === 0){
                 return NULL;
             }
             return $data;

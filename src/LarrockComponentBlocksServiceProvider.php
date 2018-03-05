@@ -3,7 +3,7 @@
 namespace Larrock\ComponentBlocks;
 
 use Illuminate\Support\ServiceProvider;
-use Larrock\ComponentBlocks\Facades\LarrockBlocks;
+use LarrockBlocks;
 use Larrock\ComponentBlocks\Middleware\AddBlocksTemplate;
 
 class LarrockComponentBlocksServiceProvider extends ServiceProvider

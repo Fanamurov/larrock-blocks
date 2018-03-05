@@ -11,7 +11,7 @@ use Larrock\Core\Traits\GetSeo;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
-use Larrock\ComponentBlocks\Facades\LarrockBlocks;
+use LarrockBlocks;
 
 /**
  * Larrock\ComponentBlocks\Models\Blocks
@@ -35,15 +35,14 @@ use Larrock\ComponentBlocks\Facades\LarrockBlocks;
  * @method static \Illuminate\Database\Query\Builder|\Larrock\ComponentBlocks\Models\Blocks whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property string $redirect
+ * @property mixed $description_render
  * @property-read mixed $first_image
  * @method static \Illuminate\Database\Query\Builder|\Larrock\ComponentBlocks\Models\Blocks whereRedirect($value)
  * @property-read mixed $full_url
  */
 class Blocks extends Model implements HasMediaConversions
 {
-    /**
-     * @var $this Component
-     */
+    /** @var $this Component */
     protected $config;
 
     use HasMediaTrait;
