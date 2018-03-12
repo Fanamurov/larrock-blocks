@@ -86,6 +86,7 @@ class Blocks extends Model implements HasMediaConversions
      * Замена тегов плагинов на их данные
      *
      * @return mixed
+     * @throws \Throwable
      */
     public function getDescriptionRenderAttribute()
     {
@@ -94,7 +95,7 @@ class Blocks extends Model implements HasMediaConversions
             $cache_key .= '-'. \Auth::user()->role->first()->level;
         }
 
-        return \Cache::remember($cache_key, 1440, function(){
+        return \Cache::rememberForever($cache_key, function(){
             $renderPlugins = new RenderPlugins($this->description, $this);
             $render = $renderPlugins->renderBlocks()->renderImageGallery()->renderFilesGallery();
             return $render->rendered_html;

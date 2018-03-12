@@ -37,6 +37,7 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
                 $html = view('larrock::front.plugins.renderBlock.default-not-editable', ['data' => $block])->render();
                 return "<?php echo '$html' ?>";
             }
+            return null;
         });
 
         $this->app['router']->aliasMiddleware('AddBlocksTemplate', AddBlocksTemplate::class);
