@@ -12,6 +12,8 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use LarrockBlocks;
+use Cache;
+use Spatie\MediaLibrary\Media;
 
 /**
  * Larrock\ComponentBlocks\Models\Blocks
@@ -102,5 +104,31 @@ class Blocks extends Model implements HasMediaConversions
     public function setUrlAttribute($value)
     {
         $this->attributes['url'] = strtolower(str_replace('-', '_', $value));
+    }
+
+    /**
+     * Перезаписываем метод из HasMediaTrait, добавляем кеш
+     * @param string $collectionName
+     * @return mixed
+     */
+    public function loadMedia(string $collectionName)
+    {
+        $cache_key = sha1('loadMediaCache'. $collectionName . $this->id . $this->getConfig()->getModelName());
+        return Cache::rememberForever($cache_key, function () use ($collectionName) {
+            $collection = $this->exists
+                ? $this->media
+                : collect($this->unAttachedMediaLibraryItems)->pluck('media');
+
+            return $collection
+                ->filter(function (Media $mediaItem) use ($collectionName) {
+                    if ($collectionName == '') {
+                        return true;
+                    }
+
+                    return $mediaItem->collection_name === $collectionName;
+                })
+                ->sortBy('order_column')
+                ->values();
+        });
     }
 }
