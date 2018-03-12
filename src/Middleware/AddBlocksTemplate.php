@@ -24,8 +24,6 @@ class AddBlocksTemplate
             return LarrockBlocks::getModel()->whereActive(1)->get();
         });
         foreach ($blocks as $block){
-            $renderPlugins = new RenderPlugins($block->description, $block);
-            $block = $renderPlugins->renderBlocks()->renderImageGallery()->renderFilesGallery();
             View::share($block->url, view('larrock::front.plugins.renderBlock.default', ['data' => $block])->render());
         }
 
