@@ -2,11 +2,10 @@
 
 namespace Larrock\ComponentBlocks\Middleware;
 
+use View;
 use Cache;
 use Closure;
 use LarrockBlocks;
-use Larrock\Core\Helpers\Plugins\RenderPlugins;
-use View;
 
 class AddBlocksTemplate
 {
@@ -20,10 +19,10 @@ class AddBlocksTemplate
      */
     public function handle($request, Closure $next)
     {
-        $blocks = Cache::rememberForever('blocks', function(){
+        $blocks = Cache::rememberForever('blocks', function () {
             return LarrockBlocks::getModel()->whereActive(1)->get();
         });
-        foreach ($blocks as $block){
+        foreach ($blocks as $block) {
             View::share($block->url, view('larrock::front.plugins.renderBlock.default', ['data' => $block])->render());
         }
 
