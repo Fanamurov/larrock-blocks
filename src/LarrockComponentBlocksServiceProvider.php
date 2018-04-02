@@ -2,8 +2,8 @@
 
 namespace Larrock\ComponentBlocks;
 
-use Illuminate\Support\ServiceProvider;
 use LarrockBlocks;
+use Illuminate\Support\ServiceProvider;
 use Larrock\ComponentBlocks\Middleware\AddBlocksTemplate;
 
 class LarrockComponentBlocksServiceProvider extends ServiceProvider
@@ -19,7 +19,7 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../views', 'larrock');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->publishes([
-            __DIR__.'/../views' => base_path('resources/views/vendor/larrock')
+            __DIR__.'/../views' => base_path('resources/views/vendor/larrock'),
         ]);
     }
 
@@ -33,17 +33,20 @@ class LarrockComponentBlocksServiceProvider extends ServiceProvider
         $blade = $this->app['view']->getEngineResolver()->resolve('blade')->getCompiler();
 
         $blade->directive('renderBlock', function ($expression) {
-            if($block = LarrockBlocks::getModel()->whereUrl($expression)->first()){
+            if ($block = LarrockBlocks::getModel()->whereUrl($expression)->first()) {
                 $html = view('larrock::front.plugins.renderBlock.default-not-editable', ['data' => $block])->render();
+
                 return "<?php echo '$html' ?>";
             }
+
             return null;
         });
 
         $this->app['router']->aliasMiddleware('AddBlocksTemplate', AddBlocksTemplate::class);
 
-        $this->app->singleton('larrockblocks', function() {
+        $this->app->singleton('larrockblocks', function () {
             $class = config('larrock.components.blocks', BlocksComponent::class);
+
             return new $class;
         });
     }

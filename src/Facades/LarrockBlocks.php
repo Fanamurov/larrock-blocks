@@ -13,5 +13,4 @@ class LarrockBlocks extends Facade
     {
         return 'larrockblocks';
     }
-
 }

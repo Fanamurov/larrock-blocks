@@ -4,8 +4,8 @@ namespace Larrock\ComponentBlocks;
 
 use Cache;
 use LarrockBlocks;
-use Larrock\ComponentBlocks\Models\Blocks;
 use Larrock\Core\Component;
+use Larrock\ComponentBlocks\Models\Blocks;
 use Larrock\Core\Helpers\FormBuilder\FormInput;
 use Larrock\Core\Helpers\FormBuilder\FormTextarea;
 
@@ -23,6 +23,7 @@ class BlocksComponent extends Component
     protected function addPlugins()
     {
         $this->addPluginImages()->addPluginFiles()->addPluginSeo();
+
         return $this;
     }
 
@@ -39,40 +40,43 @@ class BlocksComponent extends Component
 
     public function renderAdminMenu()
     {
-        $count = Cache::rememberForever('count-data-admin-'. LarrockBlocks::getName(), function(){
+        $count = Cache::rememberForever('count-data-admin-'.LarrockBlocks::getName(), function () {
             return LarrockBlocks::getModel()->count(['id']);
         });
+
         return view('larrock::admin.sectionmenu.types.default',
-            ['app' => LarrockBlocks::getConfig(), 'url' => '/admin/'. LarrockBlocks::getName(), 'count' => $count]);
+            ['app' => LarrockBlocks::getConfig(), 'url' => '/admin/'.LarrockBlocks::getName(), 'count' => $count]);
     }
 
     public function toDashboard()
     {
-        $data = Cache::rememberForever('LarrockBlocksItemsDashboard', function(){
+        $data = Cache::rememberForever('LarrockBlocksItemsDashboard', function () {
             return LarrockBlocks::getModel()->whereActive(1)->orderByDesc('updated_at')->get();
         });
+
         return view('larrock::admin.dashboard.blocks', ['component' => LarrockBlocks::getConfig(), 'data' => $data]);
     }
 
-    public function search($admin = NULL)
+    public function search($admin = null)
     {
-        return Cache::rememberForever('search'. $this->name. $admin, function() use ($admin){
+        return Cache::rememberForever('search'.$this->name.$admin, function () use ($admin) {
             $data = [];
-            if($admin){
+            if ($admin) {
                 $items = LarrockBlocks::getModel()->get(['id', 'title', 'url']);
-            }else{
+            } else {
                 $items = LarrockBlocks::getModel()->whereActive(1)->get(['id', 'title', 'url']);
             }
-            foreach ($items as $item){
+            foreach ($items as $item) {
                 $data[$item->id]['id'] = $item->id;
                 $data[$item->id]['title'] = $item->title;
                 $data[$item->id]['full_url'] = $item->full_url;
                 $data[$item->id]['component'] = $this->name;
-                $data[$item->id]['category'] = NULL;
+                $data[$item->id]['category'] = null;
             }
-            if(\count($data) === 0){
-                return NULL;
+            if (\count($data) === 0) {
+                return null;
             }
+
             return $data;
         });
     }

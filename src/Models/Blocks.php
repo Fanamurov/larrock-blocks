@@ -2,27 +2,27 @@
 
 namespace Larrock\ComponentBlocks\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Larrock\Core\Component;
-use Larrock\Core\Helpers\Plugins\RenderPlugins;
-use Larrock\Core\Traits\GetFilesAndImages;
-use Larrock\Core\Traits\GetLink;
-use Larrock\Core\Traits\GetSeo;
-use Nicolaslopezj\Searchable\SearchableTrait;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use LarrockBlocks;
 use Cache;
+use LarrockBlocks;
+use Larrock\Core\Component;
+use Larrock\Core\Traits\GetSeo;
+use Larrock\Core\Traits\GetLink;
 use Spatie\MediaLibrary\Models\Media;
+use Illuminate\Database\Eloquent\Model;
+use Larrock\Core\Traits\GetFilesAndImages;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Nicolaslopezj\Searchable\SearchableTrait;
+use Larrock\Core\Helpers\Plugins\RenderPlugins;
 
 /**
- * Larrock\ComponentBlocks\Models\Blocks
+ * Larrock\ComponentBlocks\Models\Blocks.
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $descriptions
  * @property string $url
- * @property integer $position
- * @property integer $active
+ * @property int $position
+ * @property int $active
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Models\Media[] $media
@@ -58,18 +58,18 @@ class Blocks extends Model implements HasMedia
 
     protected $searchable = [
         'columns' => [
-            'blocks.title' => 10
-        ]
+            'blocks.title' => 10,
+        ],
     ];
 
     protected $casts = [
         'position' => 'integer',
-        'active' => 'integer'
+        'active' => 'integer',
     ];
 
     public function getFullUrlAttribute()
     {
-        return '/blocks/'. $this->url;
+        return '/blocks/'.$this->url;
     }
 
     public function getConfig()
@@ -78,21 +78,22 @@ class Blocks extends Model implements HasMedia
     }
 
     /**
-     * Замена тегов плагинов на их данные
+     * Замена тегов плагинов на их данные.
      *
      * @return mixed
      * @throws \Throwable
      */
     public function getDescriptionRenderAttribute()
     {
-        $cache_key = 'DescriptionRender'. $this->table.'-'. $this->id;
-        if(\Auth::check()){
-            $cache_key .= '-'. \Auth::user()->role->first()->level;
+        $cache_key = 'DescriptionRender'.$this->table.'-'.$this->id;
+        if (\Auth::check()) {
+            $cache_key .= '-'.\Auth::user()->role->first()->level;
         }
 
-        return \Cache::rememberForever($cache_key, function(){
+        return \Cache::rememberForever($cache_key, function () {
             $renderPlugins = new RenderPlugins($this->description, $this);
             $render = $renderPlugins->renderBlocks()->renderImageGallery()->renderFilesGallery();
+
             return $render->rendered_html;
         });
     }
@@ -103,24 +104,26 @@ class Blocks extends Model implements HasMedia
     }
 
     /**
-     * Перезаписываем метод из HasMediaTrait, добавляем кеш
+     * Перезаписываем метод из HasMediaTrait, добавляем кеш.
      * @param string $collectionName
      * @return mixed
      */
     public function loadMedia(string $collectionName)
     {
-        $cache_key = sha1('loadMediaCache'. $collectionName . $this->id . $this->getConfig()->getModelName());
+        $cache_key = sha1('loadMediaCache'.$collectionName.$this->id.$this->getConfig()->getModelName());
+
         return Cache::rememberForever($cache_key, function () use ($collectionName) {
             $collection = $this->exists
                 ? $this->media
                 : collect($this->unAttachedMediaLibraryItems)->pluck('media');
 
             return $collection->filter(function (Media $mediaItem) use ($collectionName) {
-                    if ($collectionName === '') {
-                        return true;
-                    }
-                    return $mediaItem->collection_name === $collectionName;
-                })->sortBy('order_column')->values();
+                if ($collectionName === '') {
+                    return true;
+                }
+
+                return $mediaItem->collection_name === $collectionName;
+            })->sortBy('order_column')->values();
         });
     }
 }
