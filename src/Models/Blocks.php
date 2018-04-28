@@ -3,6 +3,7 @@
 namespace Larrock\ComponentBlocks\Models;
 
 use Cache;
+use Larrock\Core\Traits\GetAdminLink;
 use LarrockBlocks;
 use Larrock\Core\Component;
 use Larrock\Core\Traits\GetSeo;
@@ -46,7 +47,7 @@ class Blocks extends Model implements HasMedia
     /** @var $this Component */
     protected $config;
 
-    use SearchableTrait, GetFilesAndImages, GetSeo, GetLink;
+    use SearchableTrait, GetFilesAndImages, GetSeo, GetLink, GetAdminLink;
 
     public function __construct(array $attributes = [])
     {
